@@ -1,5 +1,6 @@
 // ======= CONFIG =======
-const BASE_URL = "http://localhost:3000/api"; // change to your Render URL in production
+const BASE_URL = "https://smarttasks-backend.onrender.com/api";
+; // change to your Render URL in production
 
 // ======= STATE =======
 let token = "";
