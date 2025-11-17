@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartTasks – Ultra Modern Productivity App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="background-gradient"></div>
+
+  <!-- AUTH SECTION -->
+  <div id="authContainer" class="center-container">
+    <div class="auth-card glass">
+      <div class="auth-left">
+        <h1>SmartTasks</h1>
+        <p class="auth-tagline">Focus. Organize. Execute.<br />Your personal productivity cockpit.</p>
+        <ul class="auth-points">
+          <li>✅ Fully secure task management</li>
+          <li>📊 Smart filters & analytics-ready</li>
+          <li>🌙 Dark mode & beautiful UI</li>
+        </ul>
+      </div>
+
+      <div class="auth-right">
+        <!-- SIGNUP -->
+        <div id="signupBox">
+          <h2>Create Account</h2>
+          <input id="signupName" class="input" placeholder="Full Name" />
+          <input id="signupEmail" class="input" placeholder="Email" />
+          <input id="signupPassword" class="input" type="password" placeholder="Password" />
+          <button class="btn primary" onclick="signup()">Get Started</button>
+          <p class="switch">
+            Already have an account?
+            <span class="link" onclick="showLogin()">Login</span>
+          </p>
+        </div>
+
+        <!-- LOGIN -->
+        <div id="loginBox" style="display:none;">
+          <h2>Welcome Back</h2>
+          <input id="loginEmail" class="input" placeholder="Email" />
+          <input id="loginPassword" class="input" type="password" placeholder="Password" />
+          <button class="btn primary" onclick="login()">Login</button>
+          <p class="switch">
+            New here?
+            <span class="link" onclick="showSignup()">Create account</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="dashboard" style="display:none;">
+    <!-- SIDEBAR -->
+    <aside class="sidebar glass">
+      <div class="sidebar-logo">
+        <div class="logo-circle">S</div>
+        <div>
+          <div class="logo-title">SmartTasks</div>
+          <div class="logo-subtitle">Productivity OS</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="side-section-title">Priority</div>
+        <button class="side-btn" onclick="filterTasks('all')">⭐ All Tasks</button>
+        <button class="side-btn" onclick="filterTasks('high')">⬆ High Priority</button>
+        <button class="side-btn" onclick="filterTasks('medium')">⬅ Medium Priority</button>
+        <button class="side-btn" onclick="filterTasks('low')">⬇ Low Priority</button>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="side-section-title">Categories</div>
+        <button class="side-btn" onclick="setCategory('all')">📚 All</button>
+        <button class="side-btn" onclick="setCategory('work')">💼 Work</button>
+        <button class="side-btn" onclick="setCategory('personal')">🏡 Personal</button>
+        <button class="side-btn" onclick="setCategory('health')">💪 Health</button>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="side-section-title">Account</div>
+        <button class="side-btn danger" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <!-- TOP BAR -->
+      <header class="top-bar glass">
+        <div>
+          <div class="top-greeting">Hello, <span id="username"></span> 👋</div>
+          <div class="top-subtitle">Here’s your command center for today.</div>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+            🌙
+          </button>
+        </div>
+      </header>
+
+      <!-- CREATE + STATS WRAPPER -->
+      <section class="top-grid">
+        <!-- CREATE TASK -->
+        <div class="create-box glass">
+          <div class="section-title">
+            <span>Add New Task</span>
+            <span class="section-subtitle">Capture what matters right now.</span>
+          </div>
+
+          <input id="title" class="input" placeholder="Task title (e.g., Finish API integration)" />
+          <input id="description" class="input" placeholder="Short description" />
+          <input id="category" class="input" placeholder="Category (work, health, personal…)" />
+
+          <div class="inline-row">
+            <select id="priority" class="input">
+              <option value="low">Low priority</option>
+              <option value="medium" selected>Medium priority</option>
+              <option value="high">High priority</option>
+            </select>
+            <button class="btn primary" onclick="createTask()">Add Task</button>
+          </div>
+        </div>
+
+        <!-- SUMMARY STATS (front-end only for now) -->
+        <div class="stats-box glass">
+          <div class="stats-title">Today’s Snapshot</div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Total Tasks</div>
+              <div class="stat-value" id="statTotal">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Completed</div>
+              <div class="stat-value" id="statCompleted">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Focus Tasks</div>
+              <div class="stat-value" id="statHigh">0</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEARCH -->
+      <section class="glass search-section">
+        <input id="searchBox" class="input search-input" placeholder="Search by title or description…" oninput="searchTasks()" />
+      </section>
+
+      <!-- TASKS -->
+      <section class="tasks-section glass">
+        <div class="section-title">
+          <span>Your Tasks</span>
+          <span class="section-subtitle">Filter, edit, complete, or delete anytime.</span>
+        </div>
+
+        <div id="tasksList" class="tasks-container"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- EDIT POPUP -->
+  <div id="editPopup" class="popup-bg" style="display:none;">
+    <div class="popup glass">
+      <h3>Edit Task</h3>
+      <input id="editTitle" class="input" placeholder="Title" />
+      <input id="editDescription" class="input" placeholder="Description" />
+      <input id="editCategory" class="input" placeholder="Category" />
+      <select id="editPriority" class="input">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+
+      <div class="inline-row">
+        <button class="btn primary" onclick="updateTask()">Save</button>
+        <button class="btn secondary" onclick="closePopup()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
